@@ -1,0 +1,29 @@
+# Claude Progress Log
+# 初始化时间: @INIT_DATE@
+
+## 最近工作
+- @RECENT_WORK@
+
+## 当前任务
+- @CURRENT_TASK@
+
+## 已完成功能
+@COMPLETED_FEATURES@
+
+## 待处理功能
+@PENDING_FEATURES@
+
+## 环境状态
+- 开发服务器: @DEV_SERVER_STATUS@
+- 测试状态: @TEST_STATUS@
+- Git 状态: @GIT_STATUS@
+
+## 最近问题
+@RECENT_ISSUES@
+
+## 技术决策
+@TECH_DECISIONS@
+
+---
+_最后更新: @LAST_UPDATE@
+_下次会话恢复时检查: 第一步执行 pwd，第二步查看此文件

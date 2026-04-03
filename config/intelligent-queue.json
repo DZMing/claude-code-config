@@ -1,0 +1,13 @@
+{
+  "version": "1.0",
+  "enabled": true,
+  "parallelism": {
+    "max_parallel_tasks": 5,
+    "min_parallel_tasks": 2,
+    "auto_detect": true
+  },
+  "thresholds": {
+    "speedup_threshold": 1.5,
+    "dependency_check": true
+  }
+}

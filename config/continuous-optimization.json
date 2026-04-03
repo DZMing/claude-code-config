@@ -1,0 +1,18 @@
+{
+  "version": "1.0",
+  "enabled": true,
+  "schedule": {
+    "analysis_day": "sunday",
+    "analysis_time": "02:00",
+    "timezone": "Asia/Shanghai"
+  },
+  "thresholds": {
+    "low_efficiency_trigger_count": 5,
+    "high_error_rate": 0.3,
+    "negative_feedback_threshold": 2
+  },
+  "automation": {
+    "auto_backup": true,
+    "require_confirmation": true
+  }
+}

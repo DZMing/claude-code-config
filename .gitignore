@@ -1,0 +1,28 @@
+# 个人数据（永不提交）
+*.env
+*.env.*
+.DS_Store
+node_modules/
+*.log
+*.bak
+*.backup
+
+# 含密钥的文件
+settings.opus.json
+settings.kimi.json
+settings.json.bak*
+
+# 运行时数据
+transcripts/
+history.jsonl
+todos/
+sessions/
+session-env/
+shell-snapshots/
+paste-cache/
+file-history/
+plugins/cache/
+statsig/
+stats-cache.json
+worktrees/
+logs/

@@ -1,0 +1,21 @@
+---
+name: plan
+description: Deep research and implementation planning
+argument-hint: "[TASK_DESCRIPTION]"
+---
+
+# /plan - 深度调研与规划
+
+1. **广度搜索 (Deep Research)**：
+   - 针对当前任务，先启动 Web Search。
+   - 搜索方向：GitHub Issues (找坑)、官方文档 (找规范)。
+
+2. **上下文聚焦**：
+   - 列出解决问题必须的 3-5 个核心文件，排除干扰。
+
+3. **任务拆解**：
+   - 将大任务拆解为 `feature_list.json` 里的条目。
+   - 明确验收标准：每个功能必须有具体的“测试通过标准”。
+
+4. **风险预判**：
+   - 提前告知：“老板，做这个功能可能会遇到 X 问题，我准备这样处理...”

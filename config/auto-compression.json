@@ -1,0 +1,17 @@
+{
+  "version": "1.0",
+  "enabled": true,
+  "thresholds": {
+    "auto_compress": 120000,
+    "warn_user": 100000,
+    "emergency": 150000
+  },
+  "retention": {
+    "history_days": 7,
+    "recent_files_count": 5
+  },
+  "recovery": {
+    "auto_load_files": true,
+    "show_summary": true
+  }
+}

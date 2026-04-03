@@ -1,0 +1,60 @@
+{
+  "version": "1.1.0",
+  "description": "Forge 全自动工作流引擎 — GSD + gstack 融合编排器",
+  "_notes": {
+    "context_thresholds": "由 forge-context-save.js 在启动时读取（v1.1 已实现）",
+    "auto_merge": "由 SKILL.md STEP 5c land-and-deploy 流程级消费，非代码级",
+    "pipeline": "由 SKILL.md STEP 4 流程级消费，非代码级",
+    "gsd_preset": "由 SKILL.md STEP 2c 写入 .planning/config.json，非直接读取"
+  },
+  "context_thresholds": {
+    "warning": 35,
+    "critical": 25,
+    "debounce_calls": 5
+  },
+  "auto_merge": {
+    "enabled": true,
+    "require_tests_pass": true,
+    "require_qa_min_score": 80,
+    "require_review_clear": true
+  },
+  "pipeline": {
+    "run_autoplan": true,
+    "run_review": true,
+    "run_qa": true,
+    "run_qa_only_web_projects": true,
+    "max_gap_closure_retries": 1,
+    "max_fix_retries": 3
+  },
+  "language": "zh-CN",
+  "default_tech_stack": "nextjs",
+  "gsd_preset": {
+    "mode": "yolo",
+    "workflow": {
+      "auto_advance": true,
+      "skip_discuss": true
+    },
+    "gates": {
+      "confirm_project": false,
+      "confirm_phases": false,
+      "confirm_roadmap": false,
+      "confirm_breakdown": false,
+      "confirm_plan": false,
+      "execute_next_plan": false,
+      "issues_review": false,
+      "confirm_transition": false
+    },
+    "safety": {
+      "always_confirm_destructive": true,
+      "always_confirm_external_services": true
+    },
+    "parallelization": {
+      "enabled": true,
+      "max_concurrent": 3,
+      "skip_checkpoints": true
+    },
+    "context": {
+      "warnings_hook": true
+    }
+  }
+}

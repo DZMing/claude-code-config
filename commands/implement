@@ -1,0 +1,22 @@
+#!/bin/bash
+# Description: Implement a feature or change with full context and safety checks
+# Usage: /implement "description of task"
+
+if [ -z "$1" ]; then
+  echo "Usage: /implement \"description of task\""
+  exit 1
+fi
+
+TASK="$1"
+
+# 1. Load Iron Protocol
+echo "Loading Iron Protocol..."
+# (Simulated by agent behavior, but we can enforce checks here if needed)
+
+# 2. Create Plan
+echo "Creating implementation plan for: $TASK"
+claude -p "Please create a detailed implementation plan for: $TASK. Use the 'superpowers:writing-plans' skill."
+
+# 3. Execute
+echo "Executing plan..."
+claude -p "Execute the plan for '$TASK' using 'superpowers:subagent-driven-development' or 'superpowers:executing-plans' as appropriate."

@@ -1,0 +1,23 @@
+#!/bin/bash
+# Description: Fix a bug or issue with systematic debugging
+# Usage: /fix "description of bug" [file_path]
+
+if [ -z "$1" ]; then
+  echo "Usage: /fix \"description of bug\" [file_path]"
+  exit 1
+fi
+
+BUG="$1"
+FILE="$2"
+
+echo "Starting systematic debugging for: $BUG"
+
+if [ -n "$FILE" ]; then
+  CONTEXT="in file $FILE"
+else
+  CONTEXT=""
+fi
+
+claude -p "Please fix the following bug $CONTEXT: '$BUG'. \
+CRITICAL: You MUST use the 'superpowers:systematic-debugging' skill first to analyze the root cause. \
+Do not attempt to fix until the cause is confirmed."

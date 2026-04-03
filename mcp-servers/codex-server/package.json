@@ -1,0 +1,24 @@
+{
+  "name": "codex-mcp-server",
+  "version": "1.0.0",
+  "description": "MCP Server封装Codex CLI，支持conversationId上下文传递",
+  "main": "index.js",
+  "bin": {
+    "codex-mcp-server": "./index.js"
+  },
+  "scripts": {
+    "start": "node index.js",
+    "test": "node test.js"
+  },
+  "keywords": [
+    "mcp",
+    "codex",
+    "claude",
+    "ai-orchestration"
+  ],
+  "author": "老金",
+  "license": "MIT",
+  "engines": {
+    "node": ">=14.0.0"
+  }
+}

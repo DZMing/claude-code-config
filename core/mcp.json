@@ -1,0 +1,118 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "description": "Claude Code MCP 服务器配置 (用户级全局) - 生产环境",
+  "mcpServers": {
+    "context7": {
+      "command": "/usr/local/bin/node",
+      "args": [
+        "/opt/homebrew/lib/node_modules/@upstash/context7-mcp/dist/index.js"
+      ],
+      "env": {
+        "PATH": "/usr/local/bin:/opt/homebrew/bin:/usr/bin:/bin:/usr/sbin:/sbin"
+      },
+      "description": "文档检索与上下文查询"
+    },
+    "gemini": {
+      "type": "stdio",
+      "command": "/usr/local/bin/node",
+      "args": [
+        "__HOME__/.claude/mcp-servers/gemini-server/index.js"
+      ],
+      "description": "Google Gemini 集成 (代码审查)"
+    },
+    "codex": {
+      "type": "stdio",
+      "command": "codex",
+      "args": [
+        "mcp"
+      ],
+      "env": {
+        "CODEX_SANDBOX": "workspace-write"
+      },
+      "description": "OpenAI Codex 集成 (代码生成)"
+    },
+    "sequential-thinking": {
+      "type": "stdio",
+      "command": "npx",
+      "args": [
+        "-y",
+        "@modelcontextprotocol/server-sequential-thinking"
+      ],
+      "description": "顺序思维链服务器"
+    },
+    "filesystem": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@anthropic-ai/mcp-server-filesystem",
+        "__HOME__"
+      ],
+      "env": {},
+      "description": "文件系统访问"
+    },
+    "github": {
+      "type": "stdio",
+      "command": "npx",
+      "args": [
+        "-y",
+        "@anthropic-ai/mcp-server-github"
+      ],
+      "description": "GitHub 集成 (issues/PR/repo)"
+    },
+    "playwright": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@anthropic-ai/mcp-server-playwright"
+      ],
+      "description": "Web 自动化测试（无反检测，仅用于本地测试）"
+    },
+    "patchright-stealth": {
+      "type": "stdio",
+      "command": "node",
+      "args": [
+        "__HOME__/tools/patchright-mcp-lite/dist/index.js"
+      ],
+      "description": "反检测隐身浏览器（优先用这个访问外部网站，过 Cloudflare）"
+    },
+    "chrome-devtools": {
+      "type": "stdio",
+      "command": "npx",
+      "args": [
+        "chrome-devtools-mcp@latest",
+        "--autoConnect",
+        "--user-data-dir",
+        "__HOME__/Library/Application Support/Google/Chrome",
+        "--profile-directory",
+        "Default"
+      ],
+      "description": "控制真实 Chrome 浏览器——使用群主真实 Profile（Default），含完整 cookies/登录态/真实指纹，不触发风控"
+    },
+    "claude-mem": {
+      "command": "node",
+      "args": [
+        "__HOME__/.claude/plugins/cache/thedotmack/claude-mem/7.4.5/scripts/mcp-server.cjs"
+      ],
+      "description": "跨会话记忆"
+    },
+    "paperclip": {
+      "command": "bash",
+      "args": [
+        "-lc",
+        "echo \"Paperclip API is available via PAPERCLIP_API_URL and PAPERCLIP_API_KEY env vars. Use HTTP/API workflow, not MCP tools.\""
+      ],
+      "description": "Compatibility shim so OpenCode agent prompts referencing paperclip MCP do not fail hard."
+    },
+    "openspace": {
+      "type": "stdio",
+      "command": "__HOME__/OpenSpace/.venv/bin/openspace-mcp",
+      "env": {
+        "OPENSPACE_HOST_SKILL_DIRS": "__HOME__/.agents/skills",
+        "OPENSPACE_WORKSPACE": "__HOME__/OpenSpace",
+        "OPENAI_API_KEY": "__YOUR_BIGMODEL_API_KEY__",
+        "OPENAI_BASE_URL": "https://open.bigmodel.cn/api/coding/paas/v4"
+      },
+      "description": "OpenSpace 技能进化引擎"
+    }
+  }
+}

@@ -1,0 +1,31 @@
+{
+  "version": "1.0",
+  "enabled": true,
+  "roles": {
+    "frontend": {
+      "name": "前端开发",
+      "keywords": ["组件", "样式", "UI", "React", "Vue"],
+      "excluded": ["API", "数据库", "后端"]
+    },
+    "backend": {
+      "name": "后端开发",
+      "keywords": ["API", "数据库", "认证", "后端"],
+      "excluded": ["组件", "UI", "前端"]
+    },
+    "testing": {
+      "name": "测试",
+      "keywords": ["测试", "pytest", "jest"],
+      "excluded": ["开发", "实现"]
+    },
+    "documentation": {
+      "name": "文档",
+      "keywords": ["文档", "README", "注释"],
+      "excluded": ["开发", "测试"]
+    }
+  },
+  "coordination": {
+    "file_locking": true,
+    "sync_interval": 300,
+    "auto_detect_conflicts": true
+  }
+}

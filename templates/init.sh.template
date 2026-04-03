@@ -1,0 +1,83 @@
+#!/bin/bash
+# init.sh - 初始化开发环境（首次运行）
+# 用途：启动开发服务器、设置基础环境、创建进度文件
+
+set -e  # 遇到错误时退出
+
+PROJECT_ROOT=$(pwd)
+PROGRESS_FILE="$PROJECT_ROOT/claude-progress.txt"
+
+echo "🚀 初始化开发环境..."
+
+# 1. 创建进度文件（如果不存在）
+if [ ! -f "$PROGRESS_FILE" ]; then
+    cat > "$PROGRESS_FILE" << 'EOF'
+# Claude Progress Log
+# 初始化时间: $(date +%Y-%m-%d_%H:%M:%S)
+
+## 最近工作
+- 无
+
+## 当前任务
+- 等待开始
+
+## 环境状态
+- 开发服务器: 未启动
+- 测试状态: 未测试
+
+EOF
+    echo "✅ 创建进度文件: $PROGRESS_FILE"
+fi
+
+# 2. 启动开发服务器（检测常见框架）
+if [ -f "package.json" ]; then
+    # Node.js 项目
+    if grep -q "\"dev\"" package.json; then
+        echo "🔧 启动 Node.js 开发服务器 (npm run dev)..."
+        npm run dev &
+        DEV_PID=$!
+        echo "✅ 开发服务器已启动 (PID: $DEV_PID)"
+        echo $DEV_PID > .dev.pid
+    fi
+elif [ -f "requirements.txt" ] || [ -f "pyproject.toml" ]; then
+    # Python 项目
+    echo "🔧 检测到 Python 项目"
+    echo "⚠️  请手动启动虚拟环境和开发服务器"
+    echo "   示例: python -m venv venv && source venv/bin/activate"
+    echo "   示例: python main.py 或 uvicorn main:app-reload"
+elif [ -f "go.mod" ]; then
+    # Go 项目
+    echo "🔧 检测到 Go 项目"
+    echo "⚠️  请手动启动开发服务器"
+    echo "   示例: go run ."
+fi
+
+# 3. 检查 git 状态
+echo ""
+echo "📂 Git 状态:"
+if [ -d ".git" ]; then
+    BRANCH=$(git branch --show-current)
+    REMOTE=$(git config --get branch.$BRANCH.remote)
+    echo "  当前分支: $BRANCH"
+    echo "  远程仓库: $REMOTE"
+
+    # 检查是否有未提交的更改
+    if ! git diff-index --quiet HEAD; then
+        echo "  ⚠️  有未提交的更改"
+    else
+        echo "  ✅ 工作区干净"
+    fi
+else
+    echo "  ⚠️  不是 Git 仓库"
+fi
+
+# 4. 下一步提示
+echo ""
+echo "✅ 环境初始化完成！"
+echo ""
+echo "📋 下一步:"
+echo "  1. 查看 features.json 选择要做的功能"
+echo "  2. 查看进度: cat $PROGRESS_FILE"
+echo "  3. 运行测试: npm test 或 pytest"
+echo ""
+echo "💡 提示: 首次运行后请做基础功能验证"
