@@ -1,40 +1,58 @@
 #!/usr/bin/env node
-// gsd-hook-version: 1.28.0
+// gsd-hook-version: 1.32.0
 // Check for GSD updates in background, write result to cache
 // Called by SessionStart hook - runs once per session
 
-const fs = require('fs');
-const path = require('path');
-const os = require('os');
-const { spawn } = require('child_process');
+const fs = require("fs");
+const path = require("path");
+const os = require("os");
+const { spawn } = require("child_process");
 
 const homeDir = os.homedir();
 const cwd = process.cwd();
 
-// Detect runtime config directory (supports Claude, OpenCode, Gemini)
+// Detect runtime config directory (supports Claude, OpenCode, Kilo, Gemini)
 // Respects CLAUDE_CONFIG_DIR for custom config directory setups
 function detectConfigDir(baseDir) {
   // Check env override first (supports multi-account setups)
   const envDir = process.env.CLAUDE_CONFIG_DIR;
-  if (envDir && fs.existsSync(path.join(envDir, 'get-shit-done', 'VERSION'))) {
+  if (envDir && fs.existsSync(path.join(envDir, "get-shit-done", "VERSION"))) {
     return envDir;
   }
-  for (const dir of ['.config/opencode', '.opencode', '.gemini', '.claude']) {
-    if (fs.existsSync(path.join(baseDir, dir, 'get-shit-done', 'VERSION'))) {
+  for (const dir of [
+    ".config/kilo",
+    ".kilo",
+    ".config/opencode",
+    ".opencode",
+    ".gemini",
+    ".claude",
+  ]) {
+    if (fs.existsSync(path.join(baseDir, dir, "get-shit-done", "VERSION"))) {
       return path.join(baseDir, dir);
     }
   }
-  return envDir || path.join(baseDir, '.claude');
+  return envDir || path.join(baseDir, ".claude");
 }
 
 const globalConfigDir = detectConfigDir(homeDir);
 const projectConfigDir = detectConfigDir(cwd);
-const cacheDir = path.join(globalConfigDir, 'cache');
-const cacheFile = path.join(cacheDir, 'gsd-update-check.json');
+// Use a shared, tool-agnostic cache directory to avoid multi-runtime
+// resolution mismatches where check-update writes to one runtime's cache
+// but statusline reads from another (#1421).
+const cacheDir = path.join(homeDir, ".cache", "gsd");
+const cacheFile = path.join(cacheDir, "gsd-update-check.json");
 
 // VERSION file locations (check project first, then global)
-const projectVersionFile = path.join(projectConfigDir, 'get-shit-done', 'VERSION');
-const globalVersionFile = path.join(globalConfigDir, 'get-shit-done', 'VERSION');
+const projectVersionFile = path.join(
+  projectConfigDir,
+  "get-shit-done",
+  "VERSION",
+);
+const globalVersionFile = path.join(
+  globalConfigDir,
+  "get-shit-done",
+  "VERSION",
+);
 
 // Ensure cache directory exists
 if (!fs.existsSync(cacheDir)) {
@@ -42,10 +60,26 @@ if (!fs.existsSync(cacheDir)) {
 }
 
 // Run check in background (spawn background process, windowsHide prevents console flash)
-const child = spawn(process.execPath, ['-e', `
+const child = spawn(
+  process.execPath,
+  [
+    "-e",
+    `
   const fs = require('fs');
   const path = require('path');
   const { execSync } = require('child_process');
+
+  // Compare semver: true if a > b (a is strictly newer than b)
+  // Strips pre-release suffixes (e.g. '3-beta.1' → '3') to avoid NaN from Number()
+  function isNewer(a, b) {
+    const pa = (a || '').split('.').map(s => Number(s.replace(/-.*/, '')) || 0);
+    const pb = (b || '').split('.').map(s => Number(s.replace(/-.*/, '')) || 0);
+    for (let i = 0; i < 3; i++) {
+      if (pa[i] > pb[i]) return true;
+      if (pa[i] < pb[i]) return false;
+    }
+    return false;
+  }
 
   const cacheFile = ${JSON.stringify(cacheFile)};
   const projectVersionFile = ${JSON.stringify(projectVersionFile)};
@@ -65,10 +99,10 @@ const child = spawn(process.execPath, ['-e', `
   } catch (e) {}
 
   // Check for stale hooks — compare hook version headers against installed VERSION
-  // Hooks live inside get-shit-done/hooks/, not configDir/hooks/
+  // Hooks are installed at configDir/hooks/ (e.g. ~/.claude/hooks/) (#1421)
   let staleHooks = [];
   if (configDir) {
-    const hooksDir = path.join(configDir, 'get-shit-done', 'hooks');
+    const hooksDir = path.join(configDir, 'hooks');
     try {
       if (fs.existsSync(hooksDir)) {
         const hookFiles = fs.readdirSync(hooksDir).filter(f => f.startsWith('gsd-') && f.endsWith('.js'));
@@ -78,7 +112,7 @@ const child = spawn(process.execPath, ['-e', `
             const versionMatch = content.match(/\\/\\/ gsd-hook-version:\\s*(.+)/);
             if (versionMatch) {
               const hookVersion = versionMatch[1].trim();
-              if (hookVersion !== installed && !hookVersion.includes('{{')) {
+              if (isNewer(installed, hookVersion) && !hookVersion.includes('{{')) {
                 staleHooks.push({ file: hookFile, hookVersion, installedVersion: installed });
               }
             } else {
@@ -97,7 +131,7 @@ const child = spawn(process.execPath, ['-e', `
   } catch (e) {}
 
   const result = {
-    update_available: latest && installed !== latest,
+    update_available: latest && isNewer(latest, installed),
     installed,
     latest: latest || 'unknown',
     checked: Math.floor(Date.now() / 1000),
@@ -105,10 +139,13 @@ const child = spawn(process.execPath, ['-e', `
   };
 
   fs.writeFileSync(cacheFile, JSON.stringify(result));
-`], {
-  stdio: 'ignore',
-  windowsHide: true,
-  detached: true  // Required on Windows for proper process detachment
-});
+`,
+  ],
+  {
+    stdio: "ignore",
+    windowsHide: true,
+    detached: true, // Required on Windows for proper process detachment
+  },
+);
 
 child.unref();

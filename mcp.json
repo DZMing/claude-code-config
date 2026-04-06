@@ -1,0 +1,36 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "description": "Claude Code MCP 服务器配置 (用户级全局) - 生产环境",
+  "mcpServers": {
+    "context7": {
+      "command": "/usr/local/bin/node",
+      "args": [
+        "/opt/homebrew/lib/node_modules/@upstash/context7-mcp/dist/index.js"
+      ],
+      "env": {
+        "PATH": "/usr/local/bin:/opt/homebrew/bin:/usr/bin:/bin:/usr/sbin:/sbin"
+      },
+      "description": "文档检索与上下文查询"
+    },
+    "chrome-devtools": {
+      "type": "stdio",
+      "command": "npx",
+      "args": [
+        "chrome-devtools-mcp@latest",
+        "--autoConnect",
+        "--user-data-dir",
+        "/Users/zhimingdeng/Library/Application Support/Google/Chrome",
+        "--profile-directory",
+        "Default"
+      ],
+      "description": "控制真实 Chrome 浏览器——使用群主真实 Profile（Default），含完整 cookies/登录态/真实指纹，不触发风控"
+    },
+    "claude-mem": {
+      "command": "node",
+      "args": [
+        "/Users/zhimingdeng/.claude/plugins/cache/thedotmack/claude-mem/7.4.5/scripts/mcp-server.cjs"
+      ],
+      "description": "跨会话记忆"
+    }
+  }
+}
