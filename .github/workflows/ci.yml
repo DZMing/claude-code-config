@@ -1,0 +1,24 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Validate JSON files
+        run: |
+          node -e "JSON.parse(require('fs').readFileSync('settings.json','utf8')); console.log('settings.json OK')"
+          node -e "JSON.parse(require('fs').readFileSync('mcp.json','utf8')); console.log('mcp.json OK')"
+
+      - name: Check JS syntax
+        run: |
+          for f in hooks/*.js; do
+            node --check "$f" && echo "$f OK"
+          done
