@@ -9,7 +9,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "node \"/Users/zhimingdeng/.claude/hooks/gsd-check-update.js\"",
+            "command": "node \"$HOME/.claude/hooks/gsd-check-update.js\"",
             "timeout": 15
           }
         ]
@@ -18,7 +18,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "node \"/Users/zhimingdeng/.claude/hooks/forge-session-start.js\"",
+            "command": "node \"$HOME/.claude/hooks/forge-session-start.js\"",
             "timeout": 10
           }
         ]
@@ -27,7 +27,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "bash /Users/zhimingdeng/.claude/hooks/gsd-session-state.sh"
+            "command": "bash $HOME/.claude/hooks/gsd-session-state.sh"
           }
         ]
       }
@@ -38,7 +38,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "node \"/Users/zhimingdeng/.claude/hooks/forge-context-bridge.js\"",
+            "command": "node \"$HOME/.claude/hooks/forge-context-bridge.js\"",
             "timeout": 15
           }
         ]
@@ -48,7 +48,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "node \"/Users/zhimingdeng/.claude/hooks/forge-quality-pipeline.js\"",
+            "command": "node \"$HOME/.claude/hooks/forge-quality-pipeline.js\"",
             "timeout": 15
           }
         ]
@@ -58,7 +58,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "node \"/Users/zhimingdeng/.claude/hooks/forge-auto-fix.js\"",
+            "command": "node \"$HOME/.claude/hooks/forge-auto-fix.js\"",
             "timeout": 10
           }
         ]
@@ -68,7 +68,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "node \"/Users/zhimingdeng/.claude/hooks/forge-state-sync.js\"",
+            "command": "node \"$HOME/.claude/hooks/forge-state-sync.js\"",
             "timeout": 10
           }
         ]
@@ -78,7 +78,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "node \"/Users/zhimingdeng/.claude/hooks/gsd-context-monitor.js\"",
+            "command": "node \"$HOME/.claude/hooks/gsd-context-monitor.js\"",
             "timeout": 10
           }
         ]
@@ -88,7 +88,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "bash /Users/zhimingdeng/.claude/hooks/gsd-phase-boundary.sh",
+            "command": "bash $HOME/.claude/hooks/gsd-phase-boundary.sh",
             "timeout": 5
           }
         ]
@@ -100,7 +100,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "node \"/Users/zhimingdeng/.claude/hooks/gsd-prompt-guard.js\"",
+            "command": "node \"$HOME/.claude/hooks/gsd-prompt-guard.js\"",
             "timeout": 5
           }
         ]
@@ -110,7 +110,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "node \"/Users/zhimingdeng/.claude/hooks/gsd-read-guard.js\"",
+            "command": "node \"$HOME/.claude/hooks/gsd-read-guard.js\"",
             "timeout": 5
           }
         ]
@@ -119,7 +119,7 @@
   },
   "statusLine": {
     "type": "command",
-    "command": "bash -c 'plugin_dir=$(ls -d \"${CLAUDE_CONFIG_DIR:-$HOME/.claude}\"/plugins/cache/jarrodwatts/claude-hud/*/ 2>/dev/null | tail -1); exec \"/Users/zhimingdeng/.bun/bin/bun\" \"${plugin_dir}src/index.ts\"'"
+    "command": "bash -c 'plugin_dir=$(ls -d \"${CLAUDE_CONFIG_DIR:-$HOME/.claude}\"/plugins/cache/jarrodwatts/claude-hud/*/ 2>/dev/null | tail -1); exec \"$HOME/.bun/bin/bun\" \"${plugin_dir}src/index.ts\"'"
   },
   "enabledPlugins": {
     "typescript-lsp@claude-plugins-official": true,
