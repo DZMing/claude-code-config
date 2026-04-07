@@ -1,0 +1,8 @@
+{
+  "user_id": "openclaw-main",
+  "language": "chinese",
+  "confirmation_mode": "zero",
+  "precision": "high",
+  "output_style": "aws_code",
+  "verbosity": "detailed"
+}

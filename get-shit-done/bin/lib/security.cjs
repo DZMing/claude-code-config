@@ -181,9 +181,11 @@ function scanForInjection(text, opts = {}) {
       findings.push('Contains suspicious zero-width or invisible Unicode characters');
     }
 
-    // Check for extremely long strings that could be prompt stuffing
-    if (text.length > 50000) {
-      findings.push(`Suspicious text length: ${text.length} chars (potential prompt stuffing)`);
+    // Check for extremely long strings that could be prompt stuffing.
+    // Normalize CRLF → LF before measuring so Windows checkouts don't inflate the count.
+    const normalizedLength = text.replace(/\r\n/g, '\n').replace(/\r/g, '\n').length;
+    if (normalizedLength > 50000) {
+      findings.push(`Suspicious text length: ${normalizedLength} chars (potential prompt stuffing)`);
     }
   }
 
@@ -219,6 +221,31 @@ function sanitizeForPrompt(text) {
 
   // Neutralize <<SYS>> markers
   sanitized = sanitized.replace(/<<\s*SYS\s*>>/gi, '«SYS-TEXT»');
+
+  return sanitized;
+}
+
+/**
+ * Sanitize text that will be displayed back to the user.
+ * Removes protocol-like leak markers that should never surface in checkpoints.
+ *
+ * @param {string} text - Text to sanitize
+ * @returns {string} Sanitized text
+ */
+function sanitizeForDisplay(text) {
+  if (!text || typeof text !== 'string') return text;
+
+  let sanitized = sanitizeForPrompt(text);
+
+  const protocolLeakPatterns = [
+    /^\s*(?:assistant|user|system)\s+to=[^:\s]+:[^\n]+$/i,
+    /^\s*<\|(?:assistant|user|system)[^|]*\|>\s*$/i,
+  ];
+
+  sanitized = sanitized
+    .split('\n')
+    .filter(line => !protocolLeakPatterns.some(pattern => pattern.test(line)))
+    .join('\n');
 
   return sanitized;
 }
@@ -343,6 +370,7 @@ module.exports = {
   INJECTION_PATTERNS,
   scanForInjection,
   sanitizeForPrompt,
+  sanitizeForDisplay,
 
   // Shell safety
   validateShellArg,

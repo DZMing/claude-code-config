@@ -1,0 +1,104 @@
+# Repository File Structure
+
+Total items: 98
+
+```
+📁 .claude-plugin
+📁 .claude
+📁 .codex
+📁 .github
+📄 .gitignore
+📁 .opencode
+📄 LICENSE
+📄 README.md
+📄 RELEASE-NOTES.md
+📁 agents
+📁 commands
+📁 docs
+📁 hooks
+📁 lib
+📁 skills
+📁 tests
+  📄 marketplace.json
+  📄 plugin.json
+  📄 settings.local.json
+  📄 INSTALL.md
+  📄 superpowers-bootstrap.md
+  📄 superpowers-codex
+  📄 FUNDING.yml
+  📄 INSTALL.md
+  📁 plugin
+  📄 code-reviewer.md
+  📄 brainstorm.md
+  📄 execute-plan.md
+  📄 write-plan.md
+  📄 README.codex.md
+  📄 README.opencode.md
+  📁 plans
+  📄 hooks.json
+  📄 session-start.sh
+  📄 skills-core.js
+  📁 brainstorming
+  📁 condition-based-waiting
+  📁 defense-in-depth
+  📁 dispatching-parallel-agents
+  📁 executing-plans
+  📁 finishing-a-development-branch
+  📁 receiving-code-review
+  📁 requesting-code-review
+  📁 root-cause-tracing
+  📁 sharing-skills
+  📁 subagent-driven-development
+  📁 systematic-debugging
+  📁 test-driven-development
+  📁 testing-anti-patterns
+  📁 testing-skills-with-subagents
+  📁 using-git-worktrees
+  📁 using-superpowers
+  📁 verification-before-completion
+  📁 writing-plans
+  📁 writing-skills
+  📁 opencode
+    📄 superpowers.js
+    📄 2025-11-22-opencode-support-design.md
+    📄 2025-11-22-opencode-support-implementation.md
+    📄 SKILL.md
+    📄 SKILL.md
+    📄 example.ts
+    📄 SKILL.md
+    📄 SKILL.md
+    📄 SKILL.md
+    📄 SKILL.md
+    📄 SKILL.md
+    📄 SKILL.md
+    📄 code-reviewer.md
+    📄 SKILL.md
+    📄 find-polluter.sh
+    📄 SKILL.md
+    📄 SKILL.md
+    📄 CREATION-LOG.md
+    📄 SKILL.md
+    📄 test-academic.md
+    📄 test-pressure-1.md
+    📄 test-pressure-2.md
+    📄 test-pressure-3.md
+    📄 SKILL.md
+    📄 SKILL.md
+    📄 SKILL.md
+    📁 examples
+    📄 SKILL.md
+    📄 SKILL.md
+    📄 SKILL.md
+    📄 SKILL.md
+    📄 SKILL.md
+    📄 anthropic-best-practices.md
+    📄 graphviz-conventions.dot
+    📄 persuasion-principles.md
+    📄 run-tests.sh
+    📄 setup.sh
+    📄 test-plugin-loading.sh
+    📄 test-priority.sh
+    📄 test-skills-core.sh
+    📄 test-tools.sh
+      📄 CLAUDE_MD_TESTING.md
+```

@@ -1,0 +1,1 @@
+/Users/zhimingdeng/.claude/commands/gsd/set-profile.md

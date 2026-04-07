@@ -1,0 +1,1 @@
+/Users/zhimingdeng/.claude/commands/gsd/plant-seed.md

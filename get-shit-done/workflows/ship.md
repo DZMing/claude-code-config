@@ -19,40 +19,60 @@ if [[ "$INIT" == @file:* ]]; then INIT=$(cat "${INIT#@file:}"); fi
 Parse from init JSON: `phase_found`, `phase_dir`, `phase_number`, `phase_name`, `padded_phase`, `commit_docs`.
 
 Also load config for branching strategy:
+
 ```bash
 CONFIG=$(node "$HOME/.claude/get-shit-done/bin/gsd-tools.cjs" state load)
 ```
 
 Extract: `branching_strategy`, `branch_name`.
+
+Detect base branch for PRs and merges:
+
+```bash
+BASE_BRANCH=$(node "$HOME/.claude/get-shit-done/bin/gsd-tools.cjs" config-get git.base_branch 2>/dev/null || echo "")
+if [ -z "$BASE_BRANCH" ] || [ "$BASE_BRANCH" = "null" ]; then
+  BASE_BRANCH=$(git symbolic-ref refs/remotes/origin/HEAD 2>/dev/null | sed 's|^refs/remotes/origin/||')
+  BASE_BRANCH="${BASE_BRANCH:-main}"
+fi
+```
+
 </step>
 
 <step name="preflight_checks">
 Verify the work is ready to ship:
 
 1. **Verification passed?**
+
    ```bash
    VERIFICATION=$(cat ${PHASE_DIR}/*-VERIFICATION.md 2>/dev/null)
    ```
+
    Check for `status: passed` or `status: human_needed` (with human approval).
    If no VERIFICATION.md or status is `gaps_found`: warn and ask user to confirm.
 
 2. **Clean working tree?**
+
    ```bash
    git status --short
    ```
+
    If uncommitted changes exist: ask user to commit or stash first.
 
 3. **On correct branch?**
+
    ```bash
    CURRENT_BRANCH=$(git branch --show-current)
    ```
-   If on `main`/`master`: warn — should be on a feature branch.
+
+   If on `${BASE_BRANCH}`: warn — should be on a feature branch.
    If branching_strategy is `none`: offer to create a branch now.
 
 4. **Remote configured?**
+
    ```bash
    git remote -v | head -2
    ```
+
    Detect `origin` remote. If no remote: error — can't create PR.
 
 5. **`gh` CLI available?**
@@ -60,7 +80,7 @@ Verify the work is ready to ship:
    which gh && gh auth status 2>&1
    ```
    If `gh` not found or not authenticated: provide setup instructions and exit.
-</step>
+   </step>
 
 <step name="push_branch">
 Push the current branch to remote:
@@ -70,20 +90,23 @@ git push origin ${CURRENT_BRANCH} 2>&1
 ```
 
 If push fails (e.g., no upstream): set upstream:
+
 ```bash
 git push --set-upstream origin ${CURRENT_BRANCH} 2>&1
 ```
 
-Report: "Pushed `{branch}` to origin ({commit_count} commits ahead of main)"
+Report: "Pushed `{branch}` to origin ({commit_count} commits ahead of ${BASE_BRANCH})"
 </step>
 
 <step name="generate_pr_body">
 Auto-generate a rich PR body from planning artifacts:
 
 **1. Title:**
+
 ```
 Phase {phase_number}: {phase_name}
 ```
+
 Or for milestone: `Milestone {version}: {name}`
 
 **2. Summary section:**
@@ -101,10 +124,12 @@ Read ROADMAP.md for phase goal. Read VERIFICATION.md for verification status.
 
 **3. Changes section:**
 For each SUMMARY.md in the phase directory:
+
 ```markdown
 ## Changes
 
 ### Plan {plan_id}: {plan_name}
+
 {one_liner from SUMMARY.md frontmatter}
 
 **Key files:**
@@ -112,6 +137,7 @@ For each SUMMARY.md in the phase directory:
 ```
 
 **4. Requirements section:**
+
 ```markdown
 ## Requirements Addressed
 
@@ -119,6 +145,7 @@ For each SUMMARY.md in the phase directory:
 ```
 
 **5. Testing section:**
+
 ```markdown
 ## Verification
 
@@ -127,11 +154,13 @@ For each SUMMARY.md in the phase directory:
 ```
 
 **6. Decisions section:**
+
 ```markdown
 ## Key Decisions
 
 {Decisions from STATE.md accumulated context relevant to this phase}
 ```
+
 </step>
 
 <step name="create_pr">
@@ -141,7 +170,7 @@ Create the PR using the generated body:
 gh pr create \
   --title "Phase ${PHASE_NUMBER}: ${PHASE_NAME}" \
   --body "${PR_BODY}" \
-  --base main
+  --base ${BASE_BRANCH}
 ```
 
 If `--draft` flag was passed: add `--draft`.
@@ -165,6 +194,7 @@ AskUserQuestion:
 ```
 
 **If "Request review":**
+
 ```bash
 gh pr edit ${PR_NUMBER} --add-reviewer "${REVIEWER}"
 ```
@@ -182,9 +212,11 @@ node "$HOME/.claude/get-shit-done/bin/gsd-tools.cjs" state update "Status" "Phas
 ```
 
 If `commit_docs` is true:
+
 ```bash
 node "$HOME/.claude/get-shit-done/bin/gsd-tools.cjs" commit "docs(${padded_phase}): ship phase ${PHASE_NUMBER} — PR #${PR_NUMBER}" --files .planning/STATE.md
 ```
+
 </step>
 
 <step name="report">
@@ -194,18 +226,20 @@ node "$HOME/.claude/get-shit-done/bin/gsd-tools.cjs" commit "docs(${padded_phase
 ## ✓ Phase {X}: {Name} — Shipped
 
 PR: #{number} ({url})
-Branch: {branch} → main
+Branch: {branch} → ${BASE_BRANCH}
 Commits: {count}
 Verification: ✓ Passed
 Requirements: {N} REQ-IDs addressed
 
 Next steps:
+
 - Review/approve PR
 - Merge when CI passes
-- /gsd:complete-milestone (if last phase in milestone)
-- /gsd:progress (to see what's next)
+- /gsd-complete-milestone (if last phase in milestone)
+- /gsd-progress (to see what's next)
 
 ───────────────────────────────────────────────────────────────
+
 ```
 </step>
 
@@ -214,9 +248,9 @@ Next steps:
 <offer_next>
 After shipping:
 
-- /gsd:complete-milestone — if all phases in milestone are done
-- /gsd:progress — see overall project state
-- /gsd:execute-phase {next} — continue to next phase
+- /gsd-complete-milestone — if all phases in milestone are done
+- /gsd-progress — see overall project state
+- /gsd-execute-phase {next} — continue to next phase
 </offer_next>
 
 <success_criteria>
@@ -226,3 +260,4 @@ After shipping:
 - [ ] STATE.md updated with shipping status
 - [ ] User knows PR number and next steps
 </success_criteria>
+```

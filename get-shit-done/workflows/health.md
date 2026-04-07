@@ -19,6 +19,7 @@ if arguments contain "--repair"; then
   REPAIR_FLAG="--repair"
 fi
 ```
+
 </step>
 
 <step name="run_health_check">
@@ -29,13 +30,14 @@ node "$HOME/.claude/get-shit-done/bin/gsd-tools.cjs" validate health $REPAIR_FLA
 ```
 
 Parse JSON output:
+
 - `status`: "healthy" | "degraded" | "broken"
 - `errors[]`: Critical issues (code, message, fix, repairable)
 - `warnings[]`: Non-critical issues
 - `info[]`: Informational notes
 - `repairable_count`: Number of auto-fixable issues
 - `repairs_performed[]`: Actions taken if --repair was used
-</step>
+  </step>
 
 <step name="format_output">
 **Format and display results:**
@@ -50,6 +52,7 @@ Errors: N | Warnings: N | Info: N
 ```
 
 **If repairs were performed:**
+
 ```
 ## Repairs Performed
 
@@ -58,17 +61,19 @@ Errors: N | Warnings: N | Info: N
 ```
 
 **If errors exist:**
+
 ```
 ## Errors
 
 - [E001] config.json: JSON parse error at line 5
-  Fix: Run /gsd:health --repair to reset to defaults
+  Fix: Run /gsd-health --repair to reset to defaults
 
 - [E002] PROJECT.md not found
-  Fix: Run /gsd:new-project to create
+  Fix: Run /gsd-new-project to create
 ```
 
 **If warnings exist:**
+
 ```
 ## Warnings
 
@@ -80,6 +85,7 @@ Errors: N | Warnings: N | Info: N
 ```
 
 **If info exists:**
+
 ```
 ## Info
 
@@ -88,10 +94,12 @@ Errors: N | Warnings: N | Info: N
 ```
 
 **Footer (if repairable issues exist and --repair was NOT used):**
+
 ```
 ---
-N issues can be auto-repaired. Run: /gsd:health --repair
+N issues can be auto-repaired. Run: /gsd-health --repair
 ```
+
 </step>
 
 <step name="offer_repair">
@@ -100,7 +108,7 @@ N issues can be auto-repaired. Run: /gsd:health --repair
 Ask user if they want to run repairs:
 
 ```
-Would you like to run /gsd:health --repair to fix N issues automatically?
+Would you like to run /gsd-health --repair to fix N issues automatically?
 ```
 
 If yes, re-run with --repair flag and display results.
@@ -122,36 +130,37 @@ Report final status.
 
 <error_codes>
 
-| Code | Severity | Description | Repairable |
-|------|----------|-------------|------------|
-| E001 | error | .planning/ directory not found | No |
-| E002 | error | PROJECT.md not found | No |
-| E003 | error | ROADMAP.md not found | No |
-| E004 | error | STATE.md not found | Yes |
-| E005 | error | config.json parse error | Yes |
-| W001 | warning | PROJECT.md missing required section | No |
-| W002 | warning | STATE.md references invalid phase | No |
-| W003 | warning | config.json not found | Yes |
-| W004 | warning | config.json invalid field value | No |
-| W005 | warning | Phase directory naming mismatch | No |
-| W006 | warning | Phase in ROADMAP but no directory | No |
-| W007 | warning | Phase on disk but not in ROADMAP | No |
-| W008 | warning | config.json: workflow.nyquist_validation absent (defaults to enabled but agents may skip) | Yes |
-| W009 | warning | Phase has Validation Architecture in RESEARCH.md but no VALIDATION.md | No |
-| I001 | info | Plan without SUMMARY (may be in progress) | No |
+| Code | Severity | Description                                                                               | Repairable |
+| ---- | -------- | ----------------------------------------------------------------------------------------- | ---------- |
+| E001 | error    | .planning/ directory not found                                                            | No         |
+| E002 | error    | PROJECT.md not found                                                                      | No         |
+| E003 | error    | ROADMAP.md not found                                                                      | No         |
+| E004 | error    | STATE.md not found                                                                        | Yes        |
+| E005 | error    | config.json parse error                                                                   | Yes        |
+| W001 | warning  | PROJECT.md missing required section                                                       | No         |
+| W002 | warning  | STATE.md references invalid phase                                                         | No         |
+| W003 | warning  | config.json not found                                                                     | Yes        |
+| W004 | warning  | config.json invalid field value                                                           | No         |
+| W005 | warning  | Phase directory naming mismatch                                                           | No         |
+| W006 | warning  | Phase in ROADMAP but no directory                                                         | No         |
+| W007 | warning  | Phase on disk but not in ROADMAP                                                          | No         |
+| W008 | warning  | config.json: workflow.nyquist_validation absent (defaults to enabled but agents may skip) | Yes        |
+| W009 | warning  | Phase has Validation Architecture in RESEARCH.md but no VALIDATION.md                     | No         |
+| I001 | info     | Plan without SUMMARY (may be in progress)                                                 | No         |
 
 </error_codes>
 
 <repair_actions>
 
-| Action | Effect | Risk |
-|--------|--------|------|
-| createConfig | Create config.json with defaults | None |
-| resetConfig | Delete + recreate config.json | Loses custom settings |
-| regenerateState | Create STATE.md from ROADMAP structure when it is missing | Loses session history |
-| addNyquistKey | Add workflow.nyquist_validation: true to config.json | None — matches existing default |
+| Action          | Effect                                                    | Risk                            |
+| --------------- | --------------------------------------------------------- | ------------------------------- |
+| createConfig    | Create config.json with defaults                          | None                            |
+| resetConfig     | Delete + recreate config.json                             | Loses custom settings           |
+| regenerateState | Create STATE.md from ROADMAP structure when it is missing | Loses session history           |
+| addNyquistKey   | Add workflow.nyquist_validation: true to config.json      | None — matches existing default |
 
 **Not repairable (too risky):**
+
 - PROJECT.md, ROADMAP.md content
 - Phase directory renaming
 - Orphaned plan cleanup
@@ -168,7 +177,7 @@ When `--repair` is active, detect and clean up:
 # Check for stale task directories (older than 24 hours)
 TASKS_DIR="$HOME/.claude/tasks"
 if [ -d "$TASKS_DIR" ]; then
-  STALE_COUNT=$(find "$TASKS_DIR" -maxdepth 1 -type d -mtime +1 2>/dev/null | wc -l)
+  STALE_COUNT=$( (find "$TASKS_DIR" -maxdepth 1 -type d -mtime +1 2>/dev/null || true) | wc -l )
   if [ "$STALE_COUNT" -gt 0 ]; then
     echo "⚠️  Found $STALE_COUNT stale task directories in $HOME/.claude/tasks/"
     echo "   These are leftover from crashed subagent sessions."

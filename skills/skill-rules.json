@@ -1,0 +1,520 @@
+{
+  "version": "1.0",
+  "description": "Skill activation triggers for Claude Code - Simplified configuration for core skills",
+  "skills": {
+    "planning-with-files": {
+      "type": "domain",
+      "enforcement": "suggest",
+      "priority": "high",
+      "description": "Manus AI workflow - file-based task planning for complex multi-step tasks",
+      "promptTriggers": {
+        "keywords": [
+          "complex task",
+          "multi-step",
+          "long task",
+          "research task",
+          "build project",
+          "implement feature",
+          "create system",
+          "planning",
+          "organize work",
+          "track progress",
+          "task plan",
+          "task planning"
+        ],
+        "intentPatterns": [
+          "(create|build|implement|develop).*?(feature|system|module|component)",
+          "(plan|organize|structure).*?(task|work|project)",
+          "(research|analyze|investigate).*?(and|then)",
+          "help.*?implement.*?(complete|full|entire)"
+        ]
+      }
+    },
+    "frontend-development": {
+      "type": "domain",
+      "enforcement": "suggest",
+      "priority": "high",
+      "description": "前端开发：React/TypeScript/组件/页面",
+      "promptTriggers": {
+        "keywords": [
+          "前端",
+          "组件",
+          "页面",
+          "React",
+          "UI",
+          "界面",
+          "按钮",
+          "表单",
+          "样式",
+          "CSS",
+          "响应式"
+        ]
+      }
+    },
+    "ui-styling": {
+      "type": "domain",
+      "enforcement": "suggest",
+      "priority": "high",
+      "description": "UI美化：shadcn/ui组件/Tailwind/配色/布局优化",
+      "promptTriggers": {
+        "keywords": [
+          "美化",
+          "好看",
+          "设计",
+          "配色",
+          "颜色",
+          "布局",
+          "优化UI",
+          "优化界面",
+          "shadcn",
+          "Tailwind",
+          "主题",
+          "视觉",
+          "外观",
+          "排版"
+        ]
+      }
+    },
+    "backend-development": {
+      "type": "domain",
+      "enforcement": "suggest",
+      "priority": "high",
+      "description": "后端开发：API/数据库/架构",
+      "promptTriggers": {
+        "keywords": [
+          "后端",
+          "API",
+          "接口",
+          "数据库",
+          "服务器",
+          "路由",
+          "endpoint",
+          "middleware",
+          "架构",
+          "微服务"
+        ]
+      }
+    },
+    "code-review": {
+      "type": "domain",
+      "enforcement": "suggest",
+      "priority": "high",
+      "description": "代码审查：质量检查/安全审计",
+      "promptTriggers": {
+        "keywords": [
+          "审查",
+          "检查代码",
+          "代码质量",
+          "review",
+          "这段代码",
+          "有问题吗",
+          "优化这段",
+          "重构"
+        ]
+      }
+    },
+    "systematic-debugging": {
+      "type": "domain",
+      "enforcement": "suggest",
+      "priority": "high",
+      "description": "系统化调试：Bug定位/错误排查",
+      "promptTriggers": {
+        "keywords": [
+          "调试",
+          "Bug",
+          "报错",
+          "错误",
+          "崩溃",
+          "不工作",
+          "失败",
+          "问题",
+          "修复",
+          "排查"
+        ]
+      }
+    },
+    "test-driven-development": {
+      "type": "domain",
+      "enforcement": "suggest",
+      "priority": "medium",
+      "description": "测试驱动开发：单元测试/集成测试",
+      "promptTriggers": {
+        "keywords": [
+          "测试",
+          "单元测试",
+          "集成测试",
+          "test",
+          "TDD",
+          "覆盖率",
+          "测试用例"
+        ]
+      }
+    },
+    "docx": {
+      "type": "domain",
+      "enforcement": "suggest",
+      "priority": "medium",
+      "description": "Word文档处理：创建/编辑/分析docx",
+      "promptTriggers": {
+        "keywords": ["Word", "文档", "docx", "doc", "报告", "合同", "简历"]
+      }
+    },
+    "pdf": {
+      "type": "domain",
+      "enforcement": "suggest",
+      "priority": "medium",
+      "description": "PDF处理：提取/合并/转换",
+      "promptTriggers": {
+        "keywords": ["PDF", "pdf", "提取文本", "合并PDF", "转换PDF"]
+      }
+    },
+    "xlsx": {
+      "type": "domain",
+      "enforcement": "suggest",
+      "priority": "medium",
+      "description": "表格处理：Excel/数据分析",
+      "promptTriggers": {
+        "keywords": ["表格", "Excel", "xlsx", "数据分析", "统计", "图表"]
+      }
+    },
+    "git-workflow": {
+      "type": "domain",
+      "enforcement": "suggest",
+      "priority": "medium",
+      "description": "Git工作流：提交/分支/合并",
+      "promptTriggers": {
+        "keywords": [
+          "Git",
+          "提交",
+          "commit",
+          "分支",
+          "合并",
+          "pull request",
+          "冲突",
+          "回退"
+        ]
+      }
+    },
+    "research": {
+      "type": "domain",
+      "enforcement": "suggest",
+      "priority": "medium",
+      "description": "技术调研：搜索文档/GitHub/最佳实践",
+      "promptTriggers": {
+        "keywords": [
+          "调研",
+          "搜索",
+          "查找",
+          "怎么做",
+          "最佳实践",
+          "官方文档",
+          "GitHub"
+        ]
+      }
+    },
+    "codex-cli": {
+      "type": "domain",
+      "enforcement": "suggest",
+      "priority": "low",
+      "description": "Codex调用：代码生成/重构",
+      "promptTriggers": {
+        "keywords": ["用Codex", "调Codex", "Codex帮我", "codex"]
+      }
+    },
+    "gemini": {
+      "type": "domain",
+      "enforcement": "suggest",
+      "priority": "low",
+      "description": "Gemini调用：代码审核/UI建议",
+      "promptTriggers": {
+        "keywords": ["用Gemini", "调Gemini", "Gemini审查", "gemini"]
+      }
+    },
+    "claude-code": {
+      "type": "domain",
+      "enforcement": "suggest",
+      "priority": "low",
+      "description": "Claude Code使用指南",
+      "promptTriggers": {
+        "keywords": [
+          "Claude Code",
+          "怎么用",
+          "功能",
+          "快捷键",
+          "hooks",
+          "skills"
+        ]
+      }
+    },
+    "prompt-optimizer": {
+      "type": "domain",
+      "enforcement": "suggest",
+      "priority": "low",
+      "description": "提示词优化：改进AI提示",
+      "promptTriggers": {
+        "keywords": ["提示词", "prompt", "优化提示", "改进prompt"]
+      }
+    },
+
+    "gstack-investigate": {
+      "type": "gstack",
+      "enforcement": "auto",
+      "priority": "critical",
+      "gstackSkillName": "investigate",
+      "supersedes": ["systematic-debugging"],
+      "promptTriggers": {
+        "keywords": [
+          "debug",
+          "bug",
+          "broken",
+          "error",
+          "crash",
+          "not working",
+          "investigate",
+          "root cause",
+          "why is this",
+          "stack trace",
+          "调试",
+          "报错",
+          "崩溃",
+          "出问题",
+          "不工作",
+          "挂了",
+          "排查"
+        ]
+      }
+    },
+    "gstack-browse": {
+      "type": "gstack",
+      "enforcement": "auto",
+      "priority": "critical",
+      "gstackSkillName": "browse",
+      "supersedes": [],
+      "promptTriggers": {
+        "keywords": [
+          "screenshot",
+          "截图",
+          "打开浏览器",
+          "test the site",
+          "dogfood",
+          "open in browser",
+          "看看网站",
+          "浏览器打开"
+        ]
+      }
+    },
+    "gstack-review": {
+      "type": "gstack",
+      "enforcement": "auto",
+      "priority": "critical",
+      "gstackSkillName": "review",
+      "supersedes": ["code-review"],
+      "promptTriggers": {
+        "keywords": [
+          "review PR",
+          "code review",
+          "审查PR",
+          "check my diff",
+          "ready to merge",
+          "pre-landing",
+          "review this PR",
+          "看看代码"
+        ]
+      }
+    },
+    "gstack-ship": {
+      "type": "gstack",
+      "enforcement": "auto",
+      "priority": "critical",
+      "gstackSkillName": "ship",
+      "supersedes": [],
+      "promptTriggers": {
+        "keywords": [
+          "ship it",
+          "deploy",
+          "发布",
+          "部署",
+          "create PR",
+          "push to main",
+          "merge and push",
+          "上线",
+          "发版"
+        ]
+      }
+    },
+
+    "gstack-qa": {
+      "type": "gstack",
+      "enforcement": "suggest-default-yes",
+      "priority": "high",
+      "gstackSkillName": "qa",
+      "supersedes": [],
+      "promptTriggers": {
+        "keywords": [
+          "does this work",
+          "QA",
+          "test this feature",
+          "测试功能",
+          "find bugs",
+          "test and fix",
+          "这个能用吗",
+          "帮我测测"
+        ]
+      }
+    },
+    "gstack-design-review": {
+      "type": "gstack",
+      "enforcement": "suggest-default-yes",
+      "priority": "high",
+      "gstackSkillName": "design-review",
+      "supersedes": ["ui-styling"],
+      "promptTriggers": {
+        "keywords": [
+          "visual QA",
+          "design polish",
+          "看起来不对",
+          "样式问题",
+          "audit the design",
+          "视觉检查",
+          "UI不对"
+        ]
+      }
+    },
+    "gstack-document-release": {
+      "type": "gstack",
+      "enforcement": "suggest-default-yes",
+      "priority": "high",
+      "gstackSkillName": "document-release",
+      "supersedes": [],
+      "promptTriggers": {
+        "keywords": [
+          "update docs",
+          "更新文档",
+          "post-ship",
+          "文档过期",
+          "sync documentation",
+          "文档同步"
+        ]
+      }
+    },
+    "gstack-plan-eng-review": {
+      "type": "gstack",
+      "enforcement": "suggest-default-yes",
+      "priority": "high",
+      "gstackSkillName": "plan-eng-review",
+      "supersedes": [],
+      "promptTriggers": {
+        "keywords": [
+          "review architecture",
+          "架构审查",
+          "before we start coding",
+          "engineering review",
+          "lock in the plan",
+          "技术方案评审"
+        ]
+      }
+    },
+
+    "gstack-office-hours": {
+      "type": "gstack",
+      "enforcement": "suggest",
+      "priority": "medium",
+      "gstackSkillName": "office-hours",
+      "supersedes": [],
+      "promptTriggers": {
+        "keywords": [
+          "brainstorm",
+          "我有个想法",
+          "is this worth building",
+          "help me think",
+          "office hours",
+          "值不值得做",
+          "头脑风暴"
+        ]
+      }
+    },
+    "gstack-plan-ceo-review": {
+      "type": "gstack",
+      "enforcement": "suggest",
+      "priority": "medium",
+      "gstackSkillName": "plan-ceo-review",
+      "supersedes": [],
+      "promptTriggers": {
+        "keywords": [
+          "think bigger",
+          "扩大范围",
+          "strategy review",
+          "rethink this",
+          "scope expansion",
+          "战略评审"
+        ]
+      }
+    },
+    "gstack-plan-design-review": {
+      "type": "gstack",
+      "enforcement": "suggest",
+      "priority": "medium",
+      "gstackSkillName": "plan-design-review",
+      "supersedes": [],
+      "promptTriggers": {
+        "keywords": [
+          "review design plan",
+          "设计评审",
+          "design critique",
+          "review the design plan",
+          "设计方案评审"
+        ]
+      }
+    },
+    "gstack-design-consultation": {
+      "type": "gstack",
+      "enforcement": "suggest",
+      "priority": "medium",
+      "gstackSkillName": "design-consultation",
+      "supersedes": [],
+      "promptTriggers": {
+        "keywords": [
+          "design system",
+          "设计系统",
+          "create DESIGN.md",
+          "brand guidelines",
+          "品牌规范"
+        ]
+      }
+    },
+    "gstack-setup-browser-cookies": {
+      "type": "gstack",
+      "enforcement": "suggest",
+      "priority": "medium",
+      "gstackSkillName": "setup-browser-cookies",
+      "supersedes": [],
+      "promptTriggers": {
+        "keywords": [
+          "import cookies",
+          "导入cookies",
+          "authenticate browser",
+          "login to the site",
+          "浏览器登录"
+        ]
+      }
+    }
+  },
+  "notes": {
+    "usage": "This hook will suggest the planning-with-files skill when you're starting a complex task",
+    "trigger_conditions": "Tasks requiring 3+ steps, research work, or when you mention planning/organization",
+    "expansion": "Add more skills and rules as needed. See https://github.com/diet103/claude-code-infrastructure-showcase for examples",
+    "enforcement_types": {
+      "auto": "Detected → invoke immediately, no confirmation needed",
+      "suggest-default-yes": "Suggest with default YES — user can skip but defaults to execute",
+      "suggest": "Skill suggestion appears but doesn't block execution",
+      "block": "Requires skill to be used before proceeding (guardrail)",
+      "warn": "Shows warning but allows proceeding"
+    },
+    "priority_levels": {
+      "critical": "Highest - Always trigger when matched",
+      "high": "Important - Trigger for most matches",
+      "medium": "Moderate - Trigger for clear matches",
+      "low": "Optional - Trigger only for explicit matches"
+    }
+  }
+}

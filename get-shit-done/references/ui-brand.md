@@ -13,6 +13,7 @@ Use for major workflow transitions.
 ```
 
 **Stage names (uppercase):**
+
 - `QUESTIONING`
 - `RESEARCHING`
 - `DEFINING REQUIREMENTS`
@@ -42,6 +43,7 @@ User action required. 62-character width.
 ```
 
 **Types:**
+
 - `CHECKPOINT: Verification Required` → `→ Type "approved" or describe issues`
 - `CHECKPOINT: Decision Required` → `→ Select: option-a / option-b`
 - `CHECKPOINT: Action Required` → `→ Type "done" when complete`
@@ -65,16 +67,19 @@ User action required. 62-character width.
 ## Progress Display
 
 **Phase/milestone level:**
+
 ```
 Progress: ████████░░ 80%
 ```
 
 **Task level:**
+
 ```
 Tasks: 2/4 complete
 ```
 
 **Plan level:**
+
 ```
 Plans: 3/5 complete
 ```
@@ -108,15 +113,15 @@ Always at end of major completions.
 
 **{Identifier}: {Name}** — {one-line description}
 
-`{copy-paste command}`
+`/clear` then:
 
-<sub>`/clear` first → fresh context window</sub>
+`{copy-paste command}`
 
 ───────────────────────────────────────────────────────────────
 
 **Also available:**
-- `/gsd:alternative-1` — description
-- `/gsd:alternative-2` — description
+- `/gsd-alternative-1` — description
+- `/gsd-alternative-2` — description
 
 ───────────────────────────────────────────────────────────────
 ```

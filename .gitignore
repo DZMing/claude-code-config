@@ -1,28 +1,91 @@
-# 个人数据（永不提交）
-*.env
-*.env.*
+# 运行时缓存 / 日志 / 临时文件
 .DS_Store
-node_modules/
-*.log
-*.bak
-*.backup
-
-# 含密钥的文件
-settings.opus.json
-settings.kimi.json
-settings.json.bak*
-
-# 运行时数据
-transcripts/
+.session-stats.json
 history.jsonl
-todos/
-sessions/
-session-env/
-shell-snapshots/
-paste-cache/
-file-history/
-plugins/cache/
+stop-log.txt
+install.log
+performance.log
+crontab.backup
+
+# 备份目录
+*.backup.*
+backups/
+archive/
+hooks.backup*/
+rules.backup*/
+skills.backup*/
+*.bak.*
+*.bak
+
+# 插件缓存（体积巨大，安装时自动重建）
+plugins/
+cache/
+.claude-plugin/
+.omc/
 statsig/
-stats-cache.json
-worktrees/
+telemetry/
+
+# 运行时状态
+projects/
+sessions/
 logs/
+tasks/
+todos/
+transcripts/
+plans/
+checkpoints/
+worktrees/
+debug/
+results/
+reports/
+paste-cache/
+shell-snapshots/
+file-history/
+evals/
+usage-data/
+channels/
+teams/
+docs/
+
+# 临时分析文件
+duplicates-analysis.json
+duplicates-removed.log
+gsd-file-manifest.json
+gsd-local-patches/
+skills-*.json
+skills-*.csv
+skills-*.txt
+plugins-file-list-before.txt
+symlinks-*.json
+symlinks-*.log
+installed_modules.json
+mcp-needs-auth-cache.json
+stats-cache.json
+security_warnings_state_*.json
+drift-prevention.json
+auto-correct.json
+
+# 旧配置备份
+settings.json.bak*
+settings.kimi.json
+settings.opus.json
+CLAUDE.md.backup*
+
+# 脚本和实验性文件
+auto-review.sh
+auto-workflow.sh
+night-scan.sh
+autonomous-workflow.json
+rainbow-deployment.md
+fusion-plan*.md
+context-compression.md
+performance-monitoring.md
+checkpoint-recovery.md
+evaluation.md
+puppeteer-mcp-guide.md
+features.json.template
+task_plan.md
+ccline/
+enhancements/
+opportunity_ranker.py
+skills/gstack

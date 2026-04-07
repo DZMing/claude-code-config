@@ -19,7 +19,7 @@
         "chrome-devtools-mcp@latest",
         "--autoConnect",
         "--user-data-dir",
-        "$HOME/Library/Application Support/Google/Chrome",
+        "/Users/zhimingdeng/Library/Application Support/Google/Chrome",
         "--profile-directory",
         "Default"
       ],
@@ -28,7 +28,7 @@
     "claude-mem": {
       "command": "node",
       "args": [
-        "$HOME/.claude/plugins/cache/thedotmack/claude-mem/7.4.5/scripts/mcp-server.cjs"
+        "/Users/zhimingdeng/.claude/plugins/cache/thedotmack/claude-mem/7.4.5/scripts/mcp-server.cjs"
       ],
       "description": "跨会话记忆"
     }

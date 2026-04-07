@@ -1,0 +1,132 @@
+{
+  "name": "autonomous-coding-agent",
+  "version": "1.0.0",
+  "description": "Claude autonomous coding agent for building complete applications with long-running sessions",
+  "author": "Anthropic",
+  "source": "https://github.com/anthropics/claude-quickstarts/tree/main/autonomous-coding",
+  "license": "Internal Anthropic use",
+  "tags": ["autonomous", "coding", "agent", "ai", "development", "claude"],
+  "category": "development",
+  "main_file": "SKILL.md",
+  "entry_points": {
+    "demo": "autonomous_agent_demo.py",
+    "agent": "agent.py",
+    "client": "client.py",
+    "security": "security.py"
+  },
+  "dependencies": {
+    "python": ">=3.8",
+    "claude-code-sdk": ">=0.1.0",
+    "anthropic": ">=0.1.0"
+  },
+  "requirements": [
+    "claude-code-sdk",
+    "anthropic",
+    "asyncio",
+    "pathlib",
+    "typing"
+  ],
+  "prerequisites": [
+    "Claude Code CLI installed",
+    "Anthropic API key configured",
+    "Node.js and npm (for generated applications)"
+  ],
+  "quick_start": {
+    "install": "pip install -r requirements.txt",
+    "configure": "export ANTHROPIC_API_KEY='your-api-key-here'",
+    "run": "python autonomous_agent_demo.py --project-dir ./my_project"
+  },
+  "features": [
+    "Two-agent pattern (initializer + coding agent)",
+    "Long-running session management",
+    "Security sandbox with command allowlist",
+    "Progress tracking and persistence",
+    "Auto-continuation between sessions",
+    "Application specification driven development",
+    "200+ feature implementation capability"
+  ],
+  "security_model": {
+    "type": "sandbox",
+    "filesystem_restriction": "project_directory_only",
+    "command_allowlist": [
+      "ls",
+      "cat",
+      "head",
+      "tail",
+      "wc",
+      "grep",
+      "npm",
+      "node",
+      "git",
+      "ps",
+      "lsof",
+      "sleep",
+      "pkill"
+    ],
+    "blocked_operations": [
+      "system_commands",
+      "network_access",
+      "system_configuration"
+    ]
+  },
+  "performance": {
+    "first_session_duration": "10-20+ minutes",
+    "subsequent_session_duration": "5-15 minutes",
+    "complete_application_duration": "several hours",
+    "memory_requirement": "2-4GB recommended",
+    "storage_requirement": "500MB-2GB"
+  },
+  "customization": {
+    "application_spec": "prompts/app_spec.txt",
+    "feature_count": "prompts/initializer_prompt.md",
+    "security_settings": "security.py",
+    "prompts_directory": "prompts/"
+  },
+  "integration": {
+    "claude_code_mcp": true,
+    "cli_interface": true,
+    "api_integration": true
+  },
+  "examples": [
+    {
+      "name": "Web Application Development",
+      "description": "Build a claude.ai clone with React/Node.js",
+      "command": "python autonomous_agent_demo.py --project-dir ./claude-clone"
+    },
+    {
+      "name": "API Development",
+      "description": "Create REST API with database integration",
+      "command": "python autonomous_agent_demo.py --project-dir ./api-project"
+    },
+    {
+      "name": "Testing Run",
+      "description": "Quick test with limited iterations",
+      "command": "python autonomous_agent_demo.py --project-dir ./test-project --max-iterations 2"
+    }
+  ],
+  "documentation": {
+    "main": "SKILL.md",
+    "references": "references/",
+    "api_docs": "references/README.md",
+    "security_guide": "references/security_guide.md"
+  },
+  "support": {
+    "github": "https://github.com/anthropics/claude-quickstarts",
+    "claude_docs": "https://docs.anthropic.com/claude/docs/claude-code",
+    "api_reference": "https://docs.anthropic.com/claude/reference"
+  },
+  "limitations": [
+    "Single-threaded execution",
+    "Fixed feature count (200 features)",
+    "Optimized for JavaScript/Node.js and Python",
+    "Sequential feature implementation"
+  ],
+  "future_enhancements": [
+    "Multi-language support",
+    "Dynamic feature generation",
+    "Parallel development",
+    "Advanced security policies"
+  ],
+  "created_at": "2025-12-01T00:00:00Z",
+  "updated_at": "2025-12-01T00:00:00Z"
+}

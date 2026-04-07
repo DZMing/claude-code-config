@@ -19,17 +19,18 @@ if [[ "$INIT" == @file:* ]]; then INIT=$(cat "${INIT#@file:}"); fi
 Extract from init JSON: `todo_count`, `todos`, `pending_dir`.
 
 If `todo_count` is 0:
+
 ```
 No pending todos.
 
-Todos are captured during work sessions with /gsd:add-todo.
+Todos are captured during work sessions with /gsd-add-todo.
 
 ---
 
 Would you like to:
 
-1. Continue with current phase (/gsd:progress)
-2. Add a todo now (/gsd:add-todo)
+1. Continue with current phase (/gsd-progress)
+2. Add a todo now (/gsd-add-todo)
 ```
 
 Exit.
@@ -37,8 +38,8 @@ Exit.
 
 <step name="parse_filter">
 Check for area filter in arguments:
-- `/gsd:check-todos` → show all
-- `/gsd:check-todos api` → filter to area:api only
+- `/gsd-check-todos` → show all
+- `/gsd-check-todos api` → filter to area:api only
 </step>
 
 <step name="list_todos">
@@ -56,7 +57,7 @@ Pending Todos:
 ---
 
 Reply with a number to view details, or:
-- `/gsd:check-todos [area]` to filter by area
+- `/gsd-check-todos [area]` to filter by area
 - `q` to exit
 ```
 
@@ -94,15 +95,17 @@ If `files` field has entries, read and briefly summarize each.
 Check for roadmap (can use init progress or directly check file existence):
 
 If `.planning/ROADMAP.md` exists:
+
 1. Check if todo's area matches an upcoming phase
 2. Check if todo's files overlap with a phase's scope
 3. Note any match for action options
-</step>
+   </step>
 
 <step name="offer_actions">
 **If todo maps to a roadmap phase:**
 
 Use AskUserQuestion:
+
 - header: "Action"
 - question: "This todo relates to Phase [N]: [name]. What would you like to do?"
 - options:
@@ -114,19 +117,20 @@ Use AskUserQuestion:
 **If no roadmap match:**
 
 Use AskUserQuestion:
+
 - header: "Action"
 - question: "What would you like to do with this todo?"
 - options:
   - "Work on it now" — move to done, start working
-  - "Create a phase" — /gsd:add-phase with this scope
+  - "Create a phase" — /gsd-add-phase with this scope
   - "Brainstorm approach" — think through before deciding
   - "Put it back" — return to list
-</step>
+    </step>
 
 <step name="execute_action">
 **Work on it now:**
 ```bash
-mv ".planning/todos/pending/[filename]" ".planning/todos/done/"
+mv ".planning/todos/pending/[filename]" ".planning/todos/completed/"
 ```
 Update STATE.md todo count. Present problem/solution context. Begin work or ask how to proceed.
 
@@ -134,7 +138,7 @@ Update STATE.md todo count. Present problem/solution context. Begin work or ask 
 Note todo reference in phase planning notes. Keep in pending. Return to list or exit.
 
 **Create a phase:**
-Display: `/gsd:add-phase [description from todo]`
+Display: `/gsd-add-phase [description from todo]`
 Keep in pending. User runs command in fresh context.
 
 **Brainstorm approach:**
@@ -155,7 +159,7 @@ If todo was moved to done/, commit the change:
 
 ```bash
 git rm --cached .planning/todos/pending/[filename] 2>/dev/null || true
-node "$HOME/.claude/get-shit-done/bin/gsd-tools.cjs" commit "docs: start work on todo - [title]" --files .planning/todos/done/[filename] .planning/STATE.md
+node "$HOME/.claude/get-shit-done/bin/gsd-tools.cjs" commit "docs: start work on todo - [title]" --files .planning/todos/completed/[filename] .planning/STATE.md
 ```
 
 Tool respects `commit_docs` config and gitignore automatically.
@@ -166,6 +170,7 @@ Confirm: "Committed: docs: start work on todo - [title]"
 </process>
 
 <success_criteria>
+
 - [ ] All pending todos listed with title, area, age
 - [ ] Area filter applied if specified
 - [ ] Selected todo's full context loaded
@@ -174,4 +179,4 @@ Confirm: "Committed: docs: start work on todo - [title]"
 - [ ] Selected action executed
 - [ ] STATE.md updated if todo count changed
 - [ ] Changes committed to git (if todo moved to done/)
-</success_criteria>
+      </success_criteria>

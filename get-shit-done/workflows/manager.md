@@ -20,9 +20,18 @@ Bootstrap via manager init:
 
 ```bash
 INIT=$(node "$HOME/.claude/get-shit-done/bin/gsd-tools.cjs" init manager)
+if [[ "$INIT" == @file:* ]]; then INIT=$(cat "${INIT#@file:}"); fi
 ```
 
-Parse JSON for: `milestone_version`, `milestone_name`, `phase_count`, `completed_count`, `in_progress_count`, `phases`, `recommended_actions`, `all_complete`, `waiting_signal`.
+Parse JSON for: `milestone_version`, `milestone_name`, `phase_count`, `completed_count`, `in_progress_count`, `phases`, `recommended_actions`, `all_complete`, `waiting_signal`, `manager_flags`.
+
+`manager_flags` contains per-step passthrough flags from config:
+
+- `manager_flags.discuss` — appended to `/gsd:discuss-phase` args (e.g. `"--auto --analyze"`)
+- `manager_flags.plan` — appended to plan agent init command
+- `manager_flags.execute` — appended to execute agent init command
+
+These are empty strings by default. Set via: `gsd-tools config-set manager.flags.discuss "--auto --analyze"`
 
 **If error:** Display the error message and exit.
 
@@ -53,6 +62,7 @@ Proceed to dashboard step.
 
 ```bash
 INIT=$(node "$HOME/.claude/get-shit-done/bin/gsd-tools.cjs" init manager)
+if [[ "$INIT" == @file:* ]]; then INIT=$(cat "${INIT#@file:}"); fi
 ```
 
 Parse the full JSON. Build the dashboard display.
@@ -109,12 +119,14 @@ All {phase_count} phases done. Ready for final steps:
 ```
 
 Ask user via AskUserQuestion:
+
 - **question:** "All phases complete. What next?"
 - **options:** "Verify work" / "Complete milestone" / "Exit manager"
 
 Handle responses:
-- "Verify work": `Skill(skill="gsd:verify-work")`  then loop to dashboard.
-- "Complete milestone": `Skill(skill="gsd:complete-milestone")` then exit.
+
+- "Verify work": `Skill(skill="gsd-verify-work")` then loop to dashboard.
+- "Complete milestone": `Skill(skill="gsd-complete-milestone")` then exit.
 - "Exit manager": Go to exit step.
 
 **If NOT all_complete**, build compound options from `recommended_actions`:
@@ -162,6 +174,7 @@ Continue:
 **Auto-refresh:** If background agents are running (`is_active` is true for any phase), set a 60-second auto-refresh cycle. After presenting the action menu, if no user input is received within 60 seconds, automatically refresh the dashboard. This interval is configurable via `manager_refresh_interval` in GSD config (default: 60 seconds, set to 0 to disable).
 
 Present via AskUserQuestion:
+
 - **question:** "What would you like to do?"
 - **options:** (compound options as built above + refresh + exit, AskUserQuestion auto-adds "Other")
 
@@ -191,24 +204,24 @@ When the user selects a compound option:
 2. **Then run the inline discuss:**
 
 ```
-Skill(skill="gsd:discuss-phase", args="{PHASE_NUM}")
+Skill(skill="gsd-discuss-phase", args="{PHASE_NUM} {manager_flags.discuss}")
 ```
 
 After discuss completes, loop back to dashboard step (background agents continue running).
 
 ### Discuss Phase N
 
-Discussion is interactive — needs user input. Run inline:
+Discussion is interactive — needs user input. Run inline with any configured flags:
 
 ```
-Skill(skill="gsd:discuss-phase", args="{PHASE_NUM}")
+Skill(skill="gsd-discuss-phase", args="{PHASE_NUM} {manager_flags.discuss}")
 ```
 
 After discuss completes, loop back to dashboard step.
 
 ### Plan Phase N
 
-Planning runs autonomously. Spawn a background agent:
+Planning runs autonomously. Spawn a background agent that delegates to the Skill pipeline with any configured flags:
 
 ```
 Task(
@@ -219,17 +232,14 @@ Task(
 Working directory: {cwd}
 Phase: {N} — {phase_name}
 Goal: {goal}
+Manager flags: {manager_flags.plan}
 
-Steps:
-1. Read the plan-phase workflow: cat $HOME/.claude/get-shit-done/workflows/plan-phase.md
-2. Run: node \"$HOME/.claude/get-shit-done/bin/gsd-tools.cjs\" init plan-phase {N}
-3. Follow the workflow steps to produce PLAN.md files for this phase.
-4. If research is enabled in config, run the research step first.
-5. Spawn a gsd-planner subagent via Task() to create the plans.
-6. If plan-checker is enabled, spawn a gsd-plan-checker subagent to verify.
-7. Commit plan files when complete.
+Run the plan-phase Skill with any configured manager flags:
+Skill(skill=\"gsd-plan-phase\", args=\"{N} --auto {manager_flags.plan}\")
 
-Important: You are running in the background. Do NOT use AskUserQuestion — make autonomous decisions based on project context. If you hit a blocker, write it to STATE.md as a blocker and stop. Do NOT silently work around permission or file access errors — let them fail so the manager can surface them with resolution hints."
+This delegates to the full plan-phase pipeline including local patches, research, plan-checker, and all quality gates.
+
+Important: You are running in the background. Do NOT use AskUserQuestion — make autonomous decisions based on project context. If you hit a blocker, write it to STATE.md as a blocker and stop. Do NOT silently work around permission or file access errors — let them fail so the manager can surface them with resolution hints. Do NOT use --no-verify on git commits."
 )
 ```
 
@@ -243,7 +253,7 @@ Loop back to dashboard step.
 
 ### Execute Phase N
 
-Execution runs autonomously. Spawn a background agent:
+Execution runs autonomously. Spawn a background agent that delegates to the Skill pipeline with any configured flags:
 
 ```
 Task(
@@ -254,17 +264,14 @@ Task(
 Working directory: {cwd}
 Phase: {N} — {phase_name}
 Goal: {goal}
+Manager flags: {manager_flags.execute}
 
-Steps:
-1. Read the execute-phase workflow: cat $HOME/.claude/get-shit-done/workflows/execute-phase.md
-2. Run: node \"$HOME/.claude/get-shit-done/bin/gsd-tools.cjs\" init execute-phase {N}
-3. Follow the workflow steps: discover plans, analyze dependencies, group into waves.
-4. For each wave, spawn gsd-executor subagents via Task() to execute plans in parallel.
-5. After all waves complete, spawn a gsd-verifier subagent if verifier is enabled.
-6. Update ROADMAP.md and STATE.md with progress.
-7. Commit all changes.
+Run the execute-phase Skill with any configured manager flags:
+Skill(skill=\"gsd-execute-phase\", args=\"{N} {manager_flags.execute}\")
 
-Important: You are running in the background. Do NOT use AskUserQuestion — make autonomous decisions. Use --no-verify on git commits. If you hit a permission error, file lock, or any access issue, do NOT work around it — let it fail and write the error to STATE.md as a blocker so the manager can surface it with resolution guidance."
+This delegates to the full execute-phase pipeline including local patches, branching, wave-based execution, verification, and all quality gates.
+
+Important: You are running in the background. Do NOT use AskUserQuestion — make autonomous decisions. Do NOT use --no-verify on git commits — let pre-commit hooks run normally. If you hit a permission error, file lock, or any access issue, do NOT work around it — let it fail and write the error to STATE.md as a blocker so the manager can surface it with resolution guidance."
 )
 ```
 
@@ -299,20 +306,22 @@ When notified that a background agent completed:
 Classify the error:
 
 **Permission / tool access error** (e.g. tool not allowed, permission denied, sandbox restriction):
+
 - Parse the error to identify which tool or command was blocked.
 - Display the error clearly, then offer to fix it:
   - **question:** "Phase {N} failed — permission denied for `{tool_or_command}`. Want me to add it to settings.local.json so it's allowed?"
   - **options:** "Add permission and retry" / "Run this phase inline instead" / "Skip and continue"
   - "Add permission and retry": Use `Skill(skill="update-config")` to add the permission to `settings.local.json`, then re-spawn the background agent. Loop to dashboard.
-  - "Run this phase inline instead": Dispatch the same action (plan/execute) inline via `Skill()` instead of a background Task. Loop to dashboard after.
+  - "Run this phase inline instead": Dispatch the same action inline via the appropriate Skill — use `Skill(skill="gsd-plan-phase", args="{N}")` if the failed action was planning, or `Skill(skill="gsd-execute-phase", args="{N}")` if the failed action was execution. Loop to dashboard after.
   - "Skip and continue": Loop to dashboard (phase stays in current state).
 
 **Other errors** (git lock, file conflict, logic error, etc.):
+
 - Display the error, then offer options via AskUserQuestion:
   - **question:** "Background agent for Phase {N} encountered an issue: {error}. What next?"
   - **options:** "Retry" / "Run inline instead" / "Skip and continue" / "View details"
   - "Retry": Re-spawn the same background agent. Loop to dashboard.
-  - "Run inline instead": Dispatch the action inline via `Skill()`. Loop to dashboard after.
+  - "Run inline instead": Dispatch the action inline via the appropriate Skill — use `Skill(skill="gsd-plan-phase", args="{N}")` if the failed action was planning, or `Skill(skill="gsd-execute-phase", args="{N}")` if the failed action was execution. Loop to dashboard after.
   - "Skip and continue": Loop to dashboard (phase stays in current state).
   - "View details": Read STATE.md blockers section, display, then re-present options.
 
@@ -343,6 +352,7 @@ Display final status with progress bar:
 </process>
 
 <success_criteria>
+
 - [ ] Dashboard displays all phases with correct status indicators (D/P/E/V columns)
 - [ ] Progress bar shows accurate completion percentage
 - [ ] Dependency resolution: blocked phases show which deps are missing
@@ -357,4 +367,4 @@ Display final status with progress bar:
 - [ ] Exit shows final status with resume instructions
 - [ ] "Other" free-text input parsed for phase number and action
 - [ ] Manager loop continues until user exits or milestone completes
-</success_criteria>
+      </success_criteria>
