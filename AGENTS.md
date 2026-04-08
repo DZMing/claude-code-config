@@ -12,23 +12,27 @@
 ### 1. Oracle（GPT）- 架构师与调试专家
 
 **特长**：
+
 - ✅ 系统架构设计
 - ✅ 深度问题分析
 - ✅ 复杂 Bug 调试
 - ✅ 技术方案评估
 
 **调用场景**：
+
 - 遇到架构决策难题
 - 调试复杂 Bug（3 次自主修复失败）
 - 需要深度技术分析
 - 评估多个技术方案
 
 **调用命令**：
+
 ```bash
 codex exec --dangerously-bypass-approvals-and-sandbox 2>/dev/null
 ```
 
 **性能指标**：
+
 - 使用次数：15
 - 成功率：85%
 - 平均耗时：120s
@@ -38,23 +42,27 @@ codex exec --dangerously-bypass-approvals-and-sandbox 2>/dev/null
 ### 2. Librarian（Claude）- 文档管理与代码库查询专家
 
 **特长**：
+
 - ✅ 知识检索
 - ✅ 技术文档解读
 - ✅ 代码库搜索
 - ✅ 快速问答
 
 **调用场景**：
+
 - 查询 API 文档
 - 搜索代码库
 - 理解技术概念
 - 快速获取信息
 
 **调用命令**：
+
 ```bash
 # 使用 Claude Code 内置能力
 ```
 
 **性能指标**：
+
 - 使用次数：8
 - 成功率：92%
 - 平均耗时：45s
@@ -64,23 +72,27 @@ codex exec --dangerously-bypass-approvals-and-sandbox 2>/dev/null
 ### 3. Frontend（Gemini）- 前端开发专家
 
 **特长**：
+
 - ✅ UI/UX 设计
 - ✅ 前端代码实现
 - ✅ 代码审查
 - ✅ 安全检查
 
 **调用场景**：
+
 - 前端组件开发
 - UI/UX 审查
 - 前端代码审核
 - 安全性检查
 
 **调用命令**：
+
 ```bash
 gemini -p "审查以下代码的质量和潜在问题: $(cat <文件路径>)"
 ```
 
 **性能指标**：
+
 - 使用次数：12
 - 成功率：78%
 - 平均耗时：90s
@@ -90,18 +102,21 @@ gemini -p "审查以下代码的质量和潜在问题: $(cat <文件路径>)"
 ### 4. Sisyphus（协调器）- 任务编排与质量管理
 
 **特长**：
+
 - ✅ 任务编排
 - ✅ 进度管理
 - ✅ 质量把关
 - ✅ Agent 协调
 
 **调用场景**：
+
 - 复杂任务分解
 - 多 Agent 协作
 - 质量审查
 - 进度追踪
 
 **调用命令**：
+
 ```bash
 # 使用 Ralph Loop 或 Task 工具
 ralph-loop
@@ -134,12 +149,14 @@ Agent 自主分析
 ### Ask @oracle 模式
 
 **触发条件**：
+
 - 遇到架构决策难题
 - 调试复杂 Bug（3 次自主修复失败）
 - 需要深度技术分析
 - 评估多个技术方案
 
 **工作流程**：
+
 ```
 1. Agent 识别到需要外部专家
 2. 调用 codex exec 启动 GPT
@@ -151,11 +168,13 @@ Agent 自主分析
 ### 多 Agent 并行策略
 
 **适用场景**：
+
 - 独立任务（无依赖关系）
 - 只读操作（不修改状态）
 - 不同类型任务（前端 + 后端 + 测试）
 
 **并行示例**：
+
 ```
 任务：开发登录功能
 
@@ -174,6 +193,7 @@ Agent 自主分析
 ### 完全自主修复权限（类似 Oh My OpenCode）
 
 **允许的操作**：
+
 - ✅ 修改代码
 - ✅ 切换方案
 - ✅ 重启进程
@@ -181,6 +201,7 @@ Agent 自主分析
 - ✅ 调用外部 Agent（Codex、Gemini）
 
 **3次自主修复循环**：
+
 ```
 测试失败
     ↓
@@ -197,22 +218,22 @@ Agent 自主分析
 
 ### 任务分级与 Agent 选择
 
-| 任务级别 | 代码量 | 主责 Agent | 协作 Agent |
-|---------|--------|-----------|-----------|
-| **T1 轻量** | < 20 行 | Librarian（Claude） | - |
-| **T2 中等** | 20-200 行 | Librarian（Claude） | 可选 Oracle |
-| **T3 重度** | 200+ 行 | Oracle（Codex） | 必须 Frontend（Gemini） |
-| **T4 危险** | 核心系统 | Oracle（Codex） | 必须 Frontend + Sisyphus |
+| 任务级别    | 代码量    | 主责 Agent          | 协作 Agent               |
+| ----------- | --------- | ------------------- | ------------------------ |
+| **T1 轻量** | < 20 行   | Librarian（Claude） | -                        |
+| **T2 中等** | 20-200 行 | Librarian（Claude） | 可选 Oracle              |
+| **T3 重度** | 200+ 行   | Oracle（Codex）     | 必须 Frontend（Gemini）  |
+| **T4 危险** | 核心系统  | Oracle（Codex）     | 必须 Frontend + Sisyphus |
 
 ### 协作模式选择
 
-| 场景 | 协作模式 | 说明 |
-|------|---------|------|
-| **前端开发** | Frontend 为主 | Gemini 负责 UI/UX，Claude 负责代码 |
-| **后端开发** | Oracle 为主 | Codex 负责架构，Claude 负责实现 |
-| **全栈开发** | 并行协作 | Frontend + Oracle 同时工作 |
-| **代码审查** | Frontend + Librarian | Gemini 审查，Claude 检索 |
-| **复杂调试** | Oracle 主导 | Codex 深度分析，其他 Agent 辅助 |
+| 场景         | 协作模式             | 说明                               |
+| ------------ | -------------------- | ---------------------------------- |
+| **前端开发** | Frontend 为主        | Gemini 负责 UI/UX，Claude 负责代码 |
+| **后端开发** | Oracle 为主          | Codex 负责架构，Claude 负责实现    |
+| **全栈开发** | 并行协作             | Frontend + Oracle 同时工作         |
+| **代码审查** | Frontend + Librarian | Gemini 审查，Claude 检索           |
+| **复杂调试** | Oracle 主导          | Codex 深度分析，其他 Agent 辅助    |
 
 ---
 
@@ -221,21 +242,25 @@ Agent 自主分析
 ### Agent 输出质量标准
 
 **Oracle（GPT）**：
+
 - 架构设计：必须通过 3 层评审（逻辑、性能、安全）
 - Bug 修复：必须提供根因分析和修复方案
 - 技术方案：必须对比 2+ 个方案并推荐最优
 
 **Librarian（Claude）**：
+
 - 代码查询：必须返回完整上下文（相关文件、函数调用链）
 - 文档检索：必须提供关键信息摘要和原文链接
 - 快速问答：必须提供准确答案和引用来源
 
 **Frontend（Gemini）**：
+
 - UI/UX 设计：必须符合现代设计规范（响应式、无障碍）
 - 代码审查：必须覆盖安全性、性能、可维护性
 - 前端实现：必须通过格式化、Lint、测试
 
 **Sisyphus（协调器）**：
+
 - 任务编排：必须明确任务依赖和执行顺序
 - 进度管理：必须实时更新任务状态和 ETA
 - 质量把关：必须验证所有输出符合质量标准
@@ -284,11 +309,33 @@ Agent 自主分析
 
 ## 📝 版本历史
 
-| 版本 | 日期 | 变更内容 | 变更原因 |
-|------|------|----------|----------|
+| 版本  | 日期       | 变更内容 | 变更原因                   |
+| ----- | ---------- | -------- | -------------------------- |
 | 1.0.0 | 2026-02-28 | 初始版本 | 基于深度研究和访谈结果生成 |
 
 ---
 
 **最后更新**：2026-02-28
 **下次审查**：每天 06:00（Heartbeat 自动触发）
+
+---
+
+## Codex Code Review Rules
+
+### Critical (must block PR)
+
+- Security: exposed API keys, tokens, or secrets in any config file
+- Hook safety: hooks that run destructive commands without safeguards
+- Permission escalation: widening tool permissions without clear justification
+
+### High (should fix before merge)
+
+- Config consistency: changes must work across all tools (Claude/Gemini/Codex/OpenCode/Cursor)
+- JSON validity: all JSON files must pass syntax validation
+- Breaking changes: renamed config keys or removed settings without migration path
+
+### Medium (suggest improvements)
+
+- Documentation: new hooks/skills/rules should have a brief description
+- Naming: follow existing conventions (kebab-case for files, camelCase for JSON keys)
+- Organization: keep configs in their established directories
